@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+
+  # PostgreSQL
+  postgres:
+    container_name: postgres
+    build: ./postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_URL: postgres://admin:password@localhost:5432/unpdf_sign_db
+      POSTGRES_DB: unpdf_sign_db
+      POSTGRES_HOST: postgres
+    ports:
+      - "5432:5432"
+
+  # Redis
+  # redis:
+  # container_name: redis
+  # image: redis
+  # ports:
+  #  - "6379:6379"
+
+  # Backend
+  unpdf_sign_ms:
+    # env_file:
+    #   - ./.private/api-keys.env "Another way to insert env variables" 
+    container_name: backend
+    build: ./
+    volumes:
+      - ./:/usr/src/unpdf_sign_ms
+    command: npm start
+    working_dir: /usr/src/unpdf_sign_ms
+    ports:
+      - "1234:1234"
+    environment:
+      POSTGRES_URI: postgres://admin:password@postgres:5432/unpdf_sign_db
+      # REDIS_URI: redis://redis:6379
