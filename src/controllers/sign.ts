@@ -19,9 +19,9 @@ const postSign = async (req: Request, res: Response, next: NextFunction) => {
         body
     });
     // return response
-    return res.status(200).json({
-        message: response.data
-    });
+    return res.status(200).json(
+        response.data
+    );
 };
 
 const postSign2Pdf = async (req: Request, res: Response, next: NextFunction) => {
