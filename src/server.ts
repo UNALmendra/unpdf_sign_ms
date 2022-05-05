@@ -1,7 +1,10 @@
+import "reflect-metadata";
+import { createConnection } from "typeorm";
 import http from 'http';
 import express, { Express } from 'express';
 import morgan from 'morgan';
 import routes from './routes/sign';
+import dbConfig from './config/database';
 
 const router: Express = express();
 
@@ -39,4 +42,13 @@ router.use((req, res, next) => {
 /** Server */
 const httpServer = http.createServer(router);
 const PORT: any = process.env.PORT ?? 1234;
-httpServer.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
+
+createConnection(dbConfig)
+  .then((_connection) => {
+    httpServer.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.log("Unable to connect to db", err);
+    process.exit(1);
+  });
+
